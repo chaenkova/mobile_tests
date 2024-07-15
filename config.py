@@ -1,5 +1,7 @@
 import os
 
 context = os.getenv('context', 'bstack')
-bstack_userName = os.getenv('bstack_userName', 'iakivkramarenko_sKlOLN')
-bstack_accessKey = os.getenv('bstack_accessKey', 'FSHAmKdKHs3XsDkg35zT')
+platform = os.getenv('platform','android')
+bstack_userName = os.getenv('bstack_userName', 'qnamail_1Rq3z8')
+bstack_accessKey = os.getenv('bstack_accessKey', 'Js2iRafW5MtQdVArsBrX')
+base_url = os.getenv('base_url', 'https://www.wikipedia.org')

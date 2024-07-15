@@ -1,4 +1,20 @@
-[tool.black]
-line-length = 88
-target-version = ['py11']
-skip-string-normalization = 1
+[tool.poetry]
+name = "mobile-tests"
+version = "0.1.0"
+description = ""
+authors = ["Daria Chaenkova <dash.kustowa2010@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+selene = "2.0.0rc4"
+allure-pytest = "^2.13.5"
+pytest = "^8.2.2"
+Appium-Python-Client = "^4.0.1"
+pydantic = "^2.8.2"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
