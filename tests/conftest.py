@@ -11,14 +11,21 @@ from selene_in_action import utils
 from appium import webdriver
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        '--device_name',
+        default='Google Pixel 3'
+    )
+
+
 @pytest.fixture(scope='function', autouse=True)
-def mobile_management():
-    if config.platform == 'android':
-        options = UiAutomator2Options().load_capabilities({
+def mobile_management(request):
+    device_name = request.config.getoption('--device_name')
+    options = UiAutomator2Options().load_capabilities({
             # Specify device and os_version for testing
             # 'platformName': 'android',
-            'platformVersion': '9.0',
-            'deviceName': 'Google Pixel 3',
+            # 'platformVersion': '9.0',
+            'deviceName': device_name,
 
             # Set URL of the application under test
             'app': 'bs://sample.app',
@@ -34,29 +41,6 @@ def mobile_management():
                 'accessKey': config.bstack_accessKey,
             }
         })
-    elif config.platform == 'ios':
-        options = UiAutomator2Options().load_capabilities({
-            # Specify device and os_version for testing
-            # 'platformName': 'ios',
-            # 'platformVersion': '16',
-            'deviceName': 'iPhone 15 Pro Max',
-
-            # Set URL of the application under test
-            'app': 'bs://sample.app',
-
-            # Set other BrowserStack capabilities
-            'bstack:options': {
-                'projectName': 'First Python project',
-                'buildName': 'browserstack-build-2',
-                'sessionName': 'BStack second_test',
-
-                # Set your access credentials
-                'userName': config.bstack_userName,
-                'accessKey': config.bstack_accessKey,
-            }
-        })
-    else:
-        print(f'platform error')
 
     # browser.config.driver_remote_url = 'http://hub.browserstack.com/wd/hub'
     # browser.config.driver_options = options
