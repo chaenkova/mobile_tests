@@ -2,6 +2,7 @@ import allure
 import pytest
 import allure_commons
 from appium.options.android import UiAutomator2Options
+from appium.options.ios import XCUITestOptions
 from selene import browser, support
 import os
 
@@ -16,31 +17,76 @@ def pytest_addoption(parser):
         '--device_name',
         default='Google Pixel 3'
     )
+    parser.addoption(
+        "--iosonly",
+        type=bool,
+        required=True,
+        default=False,
+    )
+    parser.addoption(
+        "--androidonly",
+        type=bool,
+        required=True,
+        default=False,
+    )
+
+
+def pytest_collection_modifyitems(config, items: list[pytest.Item]):
+    items.sort(key=lambda x: x.name, reverse=True)
+
+    for item in items:
+        if "ios" not in item.name and config.getoption("--iosonly"):
+            item.add_marker(pytest.mark.skip("Мы запустили только ios тесты"))
+        elif "android" not in item.name and config.getoption("--androidonly"):
+            item.add_marker(pytest.mark.skip("Мы запустили только android тесты"))
 
 
 @pytest.fixture(scope='function', autouse=True)
 def mobile_management(request):
     device_name = request.config.getoption('--device_name')
-    options = UiAutomator2Options().load_capabilities({
-            # Specify device and os_version for testing
-            # 'platformName': 'android',
-            # 'platformVersion': '9.0',
-            'deviceName': device_name,
+    capabilities = {
+        # Specify device and os_version for testing
+        # 'platformName': 'android',
+        # 'platformVersion': '9.0',
+        'deviceName': device_name,
 
-            # Set URL of the application under test
-            'app': 'bs://sample.app',
+        # Set URL of the application under test
+        'app': 'bs://sample.app',
 
-            # Set other BrowserStack capabilities
-            'bstack:options': {
-                'projectName': 'First Python project',
-                'buildName': 'browserstack-build-1',
-                'sessionName': 'BStack first_test',
+        # Set other BrowserStack capabilities
+        'bstack:options': {
+            'projectName': 'First Python project',
+            'buildName': 'browserstack-build-1',
+            'sessionName': 'BStack first_test',
 
-                # Set your access credentials
-                'userName': config.bstack_userName,
-                'accessKey': config.bstack_accessKey,
-            }
-        })
+            # Set your access credentials
+            'userName': config.bstack_userName,
+            'accessKey': config.bstack_accessKey,
+        }
+    }
+    if request.config.getoption('--androidonly'):
+        options = UiAutomator2Options().load_capabilities(capabilities)
+    elif request.config.getoption('--iosonly'):
+        options = XCUITestOptions().load_capabilities(capabilities
+                                                      #{
+                                                      #"deviceName": "iPhone 11 Pro",
+                                                      #"platformName": "ios",
+                                                      #"platformVersion": "13",
+
+                                                      # Set other BrowserStack capabilities
+                                                      #'bstack:options': {
+                                                      #    'projectName': 'First Python project',
+                                                      #    'buildName': 'browserstack-build-1',
+                                                      #    'sessionName': 'BStack first_test',
+                                                      #   "app": "bs://sample.app",
+
+                                                      # Set your access credentials
+                                                      #   'userName': config.bstack_userName,
+                                                      #   'accessKey': config.bstack_accessKey,
+                                                      #}}
+                                                      )
+    else:
+        print('unknown device')
 
     # browser.config.driver_remote_url = 'http://hub.browserstack.com/wd/hub'
     # browser.config.driver_options = options
@@ -77,5 +123,3 @@ def mobile_management(request):
         browser.quit()
 
     utils.allure.attach_bstack_video(session_id)
-
-

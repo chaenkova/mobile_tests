@@ -1,6 +1,0 @@
-pytest
-allure-pytest
-selene>=2.0.0rc4
-Appium-Python-Client
-pydantic>=1.10.7
-python-dotenv
