@@ -66,24 +66,7 @@ def mobile_management(request):
     if request.config.getoption('--androidonly').lower() == "true":
         options = UiAutomator2Options().load_capabilities(capabilities)
     elif request.config.getoption('--iosonly').lower() == "true":
-        options = XCUITestOptions().load_capabilities(capabilities
-                                                      #{
-                                                      #"deviceName": "iPhone 11 Pro",
-                                                      #"platformName": "ios",
-                                                      #"platformVersion": "13",
-
-                                                      # Set other BrowserStack capabilities
-                                                      #'bstack:options': {
-                                                      #    'projectName': 'First Python project',
-                                                      #    'buildName': 'browserstack-build-1',
-                                                      #    'sessionName': 'BStack first_test',
-                                                      #   "app": "bs://sample.app",
-
-                                                      # Set your access credentials
-                                                      #   'userName': config.bstack_userName,
-                                                      #   'accessKey': config.bstack_accessKey,
-                                                      #}}
-                                                      )
+        options = XCUITestOptions().load_capabilities(capabilities)
     else:
         print('unknown device')
 
@@ -103,6 +86,8 @@ def mobile_management(request):
     )
 
     yield
+
+    print('я закончил')
 
     allure.attach(
         browser.driver.get_screenshot_as_png(),
