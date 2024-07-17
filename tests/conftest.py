@@ -20,7 +20,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--iosonly",
         required=False,
-        default='False',
+        default='false',
     )
     parser.addoption(
         "--androidonly",
@@ -33,9 +33,9 @@ def pytest_collection_modifyitems(config, items: list[pytest.Item]):
     items.sort(key=lambda x: x.name, reverse=True)
 
     for item in items:
-        if "ios" not in item.name and config.getoption("--iosonly").lower() == "true":
+        if ("ios" not in item.name) and (config.getoption("--iosonly").lower() == "true"):
             item.add_marker(pytest.mark.skip("Мы запустили только ios тесты"))
-        elif "android" not in item.name and config.getoption("--androidonly").lower == "true":
+        elif ("android" not in item.name) and (config.getoption("--androidonly").lower() == "true"):
             item.add_marker(pytest.mark.skip("Мы запустили только android тесты"))
 
 
