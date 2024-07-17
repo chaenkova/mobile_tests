@@ -63,9 +63,9 @@ def mobile_management(request):
         }
     }
 
-    if request.config.getoption('--androidonly').lower == "true":
+    if request.config.getoption('--androidonly').lower() == "true":
         options = UiAutomator2Options().load_capabilities(capabilities)
-    elif request.config.getoption('--iosonly').lower== "true":
+    elif request.config.getoption('--iosonly').lower() == "true":
         options = XCUITestOptions().load_capabilities(capabilities
                                                       #{
                                                       #"deviceName": "iPhone 11 Pro",
