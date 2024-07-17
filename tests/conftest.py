@@ -19,15 +19,13 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--iosonly",
-        type=bool,
         required=False,
-        default=False,
+        default='False',
     )
     parser.addoption(
         "--androidonly",
-        type=bool,
         required=False,
-        default=False,
+        default='true',
     )
 
 
@@ -35,9 +33,9 @@ def pytest_collection_modifyitems(config, items: list[pytest.Item]):
     items.sort(key=lambda x: x.name, reverse=True)
 
     for item in items:
-        if "ios" not in item.name and config.getoption("--iosonly"):
+        if "ios" not in item.name and config.getoption("--iosonly").lower() == "true":
             item.add_marker(pytest.mark.skip("Мы запустили только ios тесты"))
-        elif "android" not in item.name and config.getoption("--androidonly"):
+        elif "android" not in item.name and config.getoption("--androidonly").lower == "true":
             item.add_marker(pytest.mark.skip("Мы запустили только android тесты"))
 
 
@@ -64,9 +62,10 @@ def mobile_management(request):
             'accessKey': config.bstack_accessKey,
         }
     }
-    if request.config.getoption('--androidonly'):
+
+    if request.config.getoption('--androidonly').lower == "true":
         options = UiAutomator2Options().load_capabilities(capabilities)
-    elif request.config.getoption('--iosonly'):
+    elif request.config.getoption('--iosonly').lower== "true":
         options = XCUITestOptions().load_capabilities(capabilities
                                                       #{
                                                       #"deviceName": "iPhone 11 Pro",
