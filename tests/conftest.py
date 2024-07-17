@@ -20,13 +20,13 @@ def pytest_addoption(parser):
     parser.addoption(
         "--iosonly",
         type=bool,
-        required=True,
+        required=False,
         default=False,
     )
     parser.addoption(
         "--androidonly",
         type=bool,
-        required=True,
+        required=False,
         default=False,
     )
 
