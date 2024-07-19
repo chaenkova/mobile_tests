@@ -44,6 +44,7 @@ def pytest_collection_modifyitems(config, items: list[pytest.Item]):
             item.add_marker(pytest.mark.skip("Мы запустили только android тесты"))
 
 
+
 @pytest.fixture(scope='function', autouse=True)
 def mobile_management(request):
     device_name = request.config.getoption('--device_name')
@@ -51,13 +52,11 @@ def mobile_management(request):
 
     capabilities = config.to_driver_options(context=context, device_name=device_name)
 
-    # browser.config.driver_remote_url = 'http://hub.browserstack.com/wd/hub'
-    # browser.config.driver_options = options
     if context == 'bstack':
         if request.config.getoption('--androidonly').lower() == "true":
-            options = UiAutomator2Options().load_capabilities(capabilities)
+            options = UiAutomator2Options().load_capabilities(capabilities).set_capability('app', os.getenv('app'))
         elif request.config.getoption('--iosonly').lower() == "true":
-            options = XCUITestOptions().load_capabilities(capabilities)
+            options = XCUITestOptions().load_capabilities(capabilities).set_capability('app', 'bs://sample.app')
         else:
             print('unknown device')
     else:
@@ -74,18 +73,10 @@ def mobile_management(request):
 
     yield
     if context == 'bstack':
-        allure.attach(
-            browser.driver.get_screenshot_as_png(),
-            name='screenshot',
-            attachment_type=allure.attachment_type.PNG,
-        )
-        allure.attach(
-            browser.driver.page_source,
-            name='screen xml dump',
-            attachment_type=allure.attachment_type.XML,
-        )
-
+        utils.allure.attach_screenshot(browser)
+        utils.allure.attach_xml(browser)
         session_id = browser.driver.session_id
+
         with allure.step('tear down app session'):
             browser.quit()
 

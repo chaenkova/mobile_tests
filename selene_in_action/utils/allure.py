@@ -22,13 +22,17 @@ def attach_bstack_video(session_id):
     )
 
 
-def path_from_project(relative_path: str):
-    import selene_in_action
-    from pathlib import Path
+def attach_screenshot(browser):
+    allure.attach(
+        browser.driver.get_screenshot_as_png(),
+        name='screenshot',
+        attachment_type=allure.attachment_type.PNG,
+    )
 
-    return (
-        Path(selene_in_action.__file__)
-        .parent.parent.joinpath(relative_path)
-        .absolute()
-        .__str__()
+
+def attach_xml(browser):
+    allure.attach(
+        browser.driver.page_source,
+        name='screen xml dump',
+        attachment_type=allure.attachment_type.XML,
     )
