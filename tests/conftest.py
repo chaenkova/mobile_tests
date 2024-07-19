@@ -60,7 +60,7 @@ def mobile_management(request):
             options = XCUITestOptions().load_capabilities(capabilities)
         else:
             print('unknown device')
-    elif context == 'real_device':
+    else:
         options = capabilities
 
     with allure.step('init app session'):

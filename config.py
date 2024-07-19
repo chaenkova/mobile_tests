@@ -8,10 +8,13 @@ base_url = os.getenv('base_url', 'https://www.wikipedia.org')
 
 def to_driver_options(context, device_name):
     options = UiAutomator2Options()
+    env_file_path = path_from_project(f".env.{context}.py")
+    print(env_file_path)
+    load_dotenv(dotenv_path=env_file_path)
 
-    if context == 'real_device':
+    if context == 'real_device' or 'emulator':
         options.set_capability('remote_url', os.getenv('REMOTE_URL'))
-        options.set_capability('deviceName', device_name)
+        options.set_capability('deviceName', os.getenv('DEVICE_NAME'))
         options.set_capability('appWaitActivity', os.getenv('APP_WAIT_ACTIVITY'))
         options.set_capability('app', path_from_project(os.getenv('APP')))
     else:
